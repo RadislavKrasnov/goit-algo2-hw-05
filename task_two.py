@@ -24,14 +24,17 @@ class HyperLogLog:
         
     
     def add(self, item: str) -> None:
-        x = mmh3.hash(item, signed=False)
+        x = mmh3.hash(item, signed=False) & 0xFFFFFFFF
         j = x & (self.m - 1)
         w = x >> self.p
         self.registers[j] = max(self.registers[j], self._rho(w))
 
     
-    def _rho(self, w):
-        return len(bin(w)) - 2 if w > 0 else 32
+    def _rho(self, w: int) -> int:
+        bit_len = 32 - self.p
+        if w == 0:
+            return bit_len + 1
+        return (bit_len - w.bit_length()) + 1
     
 
     def count(self):
