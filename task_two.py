@@ -73,8 +73,9 @@ def exact_count_ips() -> tuple[int, float]:
     for ip in load_ips():
         unique_ips.add(ip)
     
+    length = len(unique_ips)
     end = time.perf_counter()
-    return len(unique_ips), end - start
+    return length, end - start
     
 
 def hll_count_ips() -> tuple[int, float]:
